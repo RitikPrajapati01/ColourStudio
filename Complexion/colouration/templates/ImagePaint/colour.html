@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'CSS/style.css' %}">
+    <title>Image Coloring Studio</title>
+    <link rel="icon" href="{% static 'images/m.png' %}" type="image/png">
+</head>
+<body>
+    <header class="text-center py-5 bg-light heading">
+        <h1>Image Coloring Studio</h1>
+        <p>Transform your images with a splash of color.</p>
+    </header>
+
+    <main class="container my-5">
+        <section class="text-center mb-5">
+            <h2>Welcome</h2>
+            <p>Welcome to Image Coloring Studio, where you can effortlessly transform your black-and-white images into vibrant, colorful masterpieces.</p>
+        </section>
+
+        <section class="text-center mb-5">
+            <h2>How It Works</h2>
+            <ol class="list-unstyled">
+                <li>Upload your image.</li>
+                <li>Choose your preferred colors.</li>
+                <li>Preview and download your colored image.</li>
+            </ol>
+        </section>
+
+        <section class="form-container mb-5">
+            <form action="" method="post" enctype="multipart/form-data" novalidate>
+                <div class="mb-3">
+                    {% csrf_token %}
+                    {{ forms.non_field_errors }}
+                    {% for field in forms %}
+                        <div class="mb-3">
+                            {{ field.label_tag }} {{ field }} 
+                            <div class="text-danger">{{ field.errors|striptags }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="colour" class="form-label">Select Colour</label>
+                    <select name="colours" id="colour" class="form-select">
+                        <option value="">Select colour</option>
+                        <option value="hsv">Vivid Colors (HSV)</option>
+                        <option value="rgb">True Colors (RGB)</option>
+                        <option value="gray">Black & White</option>
+                        <option value="hls">Soft Colors (HLS)</option>
+                        <option value="neg">Negative</option>
+                    </select>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="image-section text-center">
+            <!-- UPLOADED IMAGE -->
+            <div class="mb-5">
+                <h4>Uploaded Image</h4>
+                {% if r_images.image %}
+                    <img src="{{ r_images.image.url }}" alt="Original Image" class="img-fluid">
+                {% endif %}
+            </div>
+
+            <!-- CONVERTED IMAGE -->
+            <div class="mb-5">
+                <h4>Converted Image</h4>
+                {% if converted_images %}
+                    <img src="data:image/jpeg;base64,{{ converted_images }}" alt="Converted Image" class="img-fluid">
+                {% endif %}
+            </div>
+
+            <!-- DOWNLOAD BUTTON -->
+            <div class="mb-5">
+                {% if converted_images %}
+                    <a href="data:image/jpeg;base64,{{ converted_images }}" download="converted_image.jpg" class="btn btn-success">Download File</a>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+
+    <footer class="text-center py-3 bg-light">
+        <p>&copy; 2024 Image Coloring Studio. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-GonW6zMfY3UXrHjl5G9+5kzBjqN2TXZwWw+0WZtf3p0aaKzA9sv8A4fXnCwVRwGU" crossorigin="anonymous"></script>
+</body>
+</html>
